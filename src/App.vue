@@ -13,14 +13,27 @@ import TheWelcome from './components/TheWelcome.vue'
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Arial', sans-serif;
-  background-color: #f0f2f5;
-  font-size: 18px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: #fafafa;
+  font-size: 16px;
+  color: #000;
+  line-height: 1.5;
 }
 
 .app {
   max-width: 1000px;
-  margin: 30px auto;
-  padding: 30px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+}
+
+/* Global focus styles */
+*:focus {
+  outline: 2px solid rgba(0, 0, 0, 0.2);
+  outline-offset: 2px;
+}
+
+/* Remove default button styling */
+button {
+  font-family: inherit;
 }
 </style>

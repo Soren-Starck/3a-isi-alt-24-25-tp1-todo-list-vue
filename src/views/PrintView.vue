@@ -16,131 +16,179 @@ const goToTodoList = () => {
 
 <template>
   <div class="print-view">
-    <h1>Liste de Tâches - Vue d'Impression</h1>
-    
-    <div class="actions">
-      <button @click="goToTodoList" class="back-button">Retour à la liste</button>
-    </div>
+    <header>
+      <h1>Tasks</h1>
+      <button @click="goToTodoList" class="back-button">
+        <span>←</span> Return
+      </button>
+    </header>
     
     <div class="summary">
-      <p>Total des tâches: <strong>{{ totalTasks }}</strong></p>
-      <p>Tâches à faire: <strong>{{ incompleteTasks }}</strong></p>
+      <div class="stat">
+        <span class="value">{{ totalTasks }}</span>
+        <span class="label">Total</span>
+      </div>
+      <div class="divider"></div>
+      <div class="stat">
+        <span class="value">{{ incompleteTasks }}</span>
+        <span class="label">Remaining</span>
+      </div>
     </div>
     
-    <ul class="todos">
-      <li v-for="(todo, index) in todos" :key="index" :class="{ completed: todo.completed }">
-        <span class="todo-text">{{ todo.text }}</span>
-      </li>
-    </ul>
+    <div class="task-list">
+      <div v-for="(todo, index) in todos" 
+           :key="index" 
+           class="task-item"
+           :class="{ 'task-completed': todo.completed }">
+        <span class="task-marker">{{ todo.completed ? '✓' : '○' }}</span>
+        <span class="task-text">{{ todo.text }}</span>
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
 .print-view {
-  background: white;
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #000;
+  background: #fff;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 1.5rem;
 }
 
 h1 {
-  text-align: center;
-  color: #333;
-  margin-bottom: 30px;
-  font-size: 2.5rem;
-}
-
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 30px;
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  margin: 0;
 }
 
 .back-button {
-  background-color: #3498db;
-  color: white;
-  padding: 15px 25px;
-  border: none;
-  border-radius: 8px;
+  background: none;
+  border: 1px solid #000;
+  color: #000;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 1.2rem;
-  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   transition: all 0.2s ease;
 }
 
 .back-button:hover {
-  background: #2980b9;
-  transform: translateY(-2px);
+  background: #000;
+  color: #fff;
 }
 
 .summary {
-  margin-bottom: 30px;
-  padding: 25px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  font-size: 1.3rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  margin-bottom: 3rem;
+  background: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 6px;
 }
 
-.summary p {
-  margin: 10px 0;
+.stat {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  text-align: center;
 }
 
-.todos {
-  list-style-type: none;
-  padding: 0;
+.value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 0.5rem;
 }
 
-li {
-  padding: 20px;
-  border-bottom: 1px solid #eee;
-  font-size: 1.3rem;
-  transition: background-color 0.2s ease;
+.label {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #666;
 }
 
-li:hover {
-  background-color: #f9f9f9;
+.divider {
+  width: 1px;
+  height: 3rem;
+  background: #e0e0e0;
+  margin: 0 2rem;
 }
 
-li:last-child {
-  border-bottom: none;
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-.todo-text {
-  font-size: 1.3rem;
+.task-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid #eaeaea;
+  border-radius: 4px;
+  transition: all 0.2s ease;
 }
 
-.completed .todo-text {
+.task-item:hover {
+  background: #fafafa;
+}
+
+.task-marker {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  font-size: 1rem;
+}
+
+.task-text {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.task-completed {
+  background: #f9f9f9;
+}
+
+.task-completed .task-text {
   text-decoration: line-through;
   color: #888;
 }
 
 @media print {
-  .actions {
+  .back-button {
     display: none;
   }
   
-  body {
-    background-color: white;
-    font-size: 14pt;
-  }
-  
   .print-view {
-    box-shadow: none;
     padding: 0;
   }
   
-  .summary {
-    border: 1px solid #ddd;
-  }
-  
-  h1 {
-    font-size: 24pt;
-  }
-  
-  li {
-    padding: 10pt 0;
+  .task-item {
     page-break-inside: avoid;
+    border-color: #ddd;
+  }
+  
+  .summary {
+    border: 1px solid #eaeaea;
   }
 }
 </style> 

@@ -47,181 +47,289 @@ const goToPrintView = () => {
 
 <template>
   <div class="todo-list">
-    <h1>Ma Liste de Tâches</h1>
-    
-    <div class="actions">
-      <button @click="goToPrintView" class="print-button">Vue d'impression</button>
-    </div>
+    <header>
+      <h1>Tasks</h1>
+      <button @click="goToPrintView" class="print-button">
+        Print View
+      </button>
+    </header>
     
     <div v-if="editingIndex === -1" class="add-todo">
       <input 
         v-model="newTodo" 
-        placeholder="Nouvelle tâche..."
+        placeholder="Add new task..."
         @keyup.enter="addTodo"
+        class="task-input"
       />
-      <button @click="addTodo">Ajouter</button>
+      <button @click="addTodo" class="add-button">Add</button>
     </div>
     
-    <div v-if="editingIndex !== -1" class="edit-todo">
+    <div v-if="editingIndex !== -1" class="edit-form">
       <input 
         v-model="editText" 
-        placeholder="Modifier la tâche..." 
+        placeholder="Edit task..." 
         @keyup.enter="saveEdit"
+        class="task-input"
       />
-      <div class="edit-buttons">
-        <button @click="saveEdit">Confirmer</button>
-        <button @click="cancelEdit">Annuler</button>
+      <div class="edit-actions">
+        <button @click="saveEdit" class="confirm-button">Save</button>
+        <button @click="cancelEdit" class="cancel-button">Cancel</button>
       </div>
     </div>
     
-    <ul class="todos">
-      <li v-for="(todo, index) in todos" :key="index" :class="{ completed: todo.completed }">
-        <div class="todo-content">
-          <input 
-            type="checkbox" 
-            v-model="todo.completed"
-          />
-          <span class="todo-text">{{ todo.text }}</span>
+    <div class="task-list">
+      <div v-for="(todo, index) in todos" 
+           :key="index" 
+           class="task-item"
+           :class="{ 'task-completed': todo.completed }">
+        <div class="task-content">
+          <label class="checkbox-container">
+            <input 
+              type="checkbox" 
+              v-model="todo.completed"
+            />
+            <span class="checkmark"></span>
+          </label>
+          <span class="task-text">{{ todo.text }}</span>
         </div>
-        <div class="todo-actions">
-          <button @click="startEditing(index)" class="edit">Modifier</button>
-          <button @click="deleteTodo(index)" class="delete">Supprimer</button>
+        <div class="task-actions">
+          <button @click="startEditing(index)" class="icon-button edit-button">Edit</button>
+          <button @click="deleteTodo(index)" class="icon-button delete-button">Delete</button>
         </div>
-      </li>
-    </ul>
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
 .todo-list {
-  background: white;
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #000;
+  background: #fff;
 }
 
-h1 {
-  text-align: center;
-  color: #333;
-  margin-bottom: 30px;
-  font-size: 2.5rem;
-}
-
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 30px;
-}
-
-.print-button {
-  background-color: #4caf50;
-  color: white;
-  font-size: 1.2rem;
-  padding: 12px 24px;
-}
-
-.add-todo, .edit-todo {
-  display: flex;
-  margin-bottom: 30px;
-}
-
-.edit-todo {
-  flex-direction: column;
-  gap: 15px;
-}
-
-.edit-buttons {
-  display: flex;
-  gap: 15px;
-}
-
-input[type="text"], input {
-  flex: 1;
-  padding: 15px;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  font-size: 1.2rem;
-}
-
-button {
-  padding: 15px 25px;
-  background: #3498db;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1.2rem;
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
-
-button:hover {
-  background: #2980b9;
-  transform: translateY(-2px);
-}
-
-.todos {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
+header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  border-bottom: 1px solid #eee;
-  transition: background-color 0.2s ease;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 1.5rem;
 }
 
-li:hover {
-  background-color: #f9f9f9;
+h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  margin: 0;
 }
 
-li:last-child {
-  border-bottom: none;
+.print-button {
+  background: none;
+  border: 1px solid #000;
+  color: #000;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.todo-content {
+.print-button:hover {
+  background: #000;
+  color: #fff;
+}
+
+.add-todo {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.task-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #eaeaea;
+  border-radius: 4px;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+
+.task-input:focus {
+  outline: none;
+  border-color: #000;
+}
+
+button {
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.75rem 1.25rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.add-button {
+  background: #000;
+  color: #fff;
+}
+
+.add-button:hover {
+  background: #333;
+}
+
+.confirm-button {
+  background: #000;
+  color: #fff;
+}
+
+.confirm-button:hover {
+  background: #333;
+}
+
+.cancel-button {
+  background: none;
+  border: 1px solid #000;
+  color: #000;
+}
+
+.cancel-button:hover {
+  background: #f5f5f5;
+}
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid #eaeaea;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.task-item:hover {
+  background: #fafafa;
+}
+
+.task-content {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 1rem;
 }
 
-.todo-content input[type="checkbox"] {
-  width: 24px;
-  height: 24px;
+.checkbox-container {
+  display: block;
+  position: relative;
+  padding-left: 0;
   cursor: pointer;
+  width: 20px;
+  height: 20px;
 }
 
-.todo-actions {
+.checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  border: 1px solid #000;
+  border-radius: 2px;
+}
+
+.checkbox-container input:checked ~ .checkmark {
+  background-color: #000;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.checkbox-container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.checkbox-container .checkmark:after {
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.task-text {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.task-actions {
   display: flex;
-  gap: 15px;
+  gap: 0.5rem;
 }
 
-.todo-text {
-  font-size: 1.3rem;
-  color: #333;
+.icon-button {
+  background: none;
+  border: none;
+  font-size: 0.75rem;
+  padding: 0.4rem 0.6rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.completed .todo-text {
+.icon-button:hover {
+  color: #000;
+}
+
+.edit-button:hover {
+  color: #000;
+}
+
+.delete-button:hover {
+  color: #000;
+}
+
+.task-completed {
+  background: #f9f9f9;
+}
+
+.task-completed .task-text {
   text-decoration: line-through;
   color: #888;
-}
-
-.edit {
-  background: #f39c12;
-}
-
-.edit:hover {
-  background: #e67e22;
-}
-
-.delete {
-  background: #e74c3c;
-}
-
-.delete:hover {
-  background: #c0392b;
 }
 </style> 
